@@ -1,0 +1,15 @@
+{
+  // *** 字体
+  "editor.fontFamily": "JetBrains Mono, Monaco, 'Courier New', monospace , MesloLGs NF",
+  // 当窗口失去焦点时，会自动保存具有更改的编辑器
+  "files.autoSave": "onWindowChange",
+  // 默认格式化工具选择prettier
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // 保存的时候自动格式化
+  "editor.formatOnSave": true,
+  // 开启自动修复
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.fixAll.eslint": "explicit"
+  }
+}
