@@ -31,7 +31,17 @@ export default defineNuxtConfig({
     // 严格类型检查
     strict: true,
   },
-  modules: ['@nuxt/eslint', '@vueuse/nuxt', '@unocss/nuxt'],
+  modules: [
+    '@nuxt/eslint',
+    '@vueuse/nuxt',
+    '@unocss/nuxt',
+    '@nuxtjs/color-mode',
+    '@tdesign-vue-next/nuxt',
+  ],
+  tdesign: {
+    // 从“tdesign-icons-vue-next”解析单个图标组件
+    resolveIcons: true,
+  },
   css: [
     // css-reset https://unocss.dev/guide/style-reset
     '@unocss/reset/tailwind.css',

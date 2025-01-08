@@ -11,14 +11,18 @@
   },
   "dependencies": {
     "nuxt": "^3.15.1",
+    "tdesign-icons-vue-next": "^0.3.3",
+    "tdesign-vue-next": "^1.10.6",
     "vue": "latest",
     "vue-router": "latest"
   },
   "devDependencies": {
     "@nuxt/eslint": "^0.7.4",
+    "@nuxtjs/color-mode": "^3.5.2",
+    "@tdesign-vue-next/nuxt": "^0.1.5",
     "@unocss/nuxt": "^0.65.3",
     "@vueuse/nuxt": "^12.3.0",
-    "vue-tsc": "^2.2.0"
+    "vue-tsc": "^2.1.10"
   },
   "lint-staged": {
     "**/*.{html,vue,ts,cjs,json,md}": [
