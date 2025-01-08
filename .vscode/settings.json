@@ -11,5 +11,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit",
     "source.fixAll.eslint": "explicit"
-  }
+  },
+  "unocss.remToPxRatio": 14
 }
