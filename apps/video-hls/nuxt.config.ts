@@ -10,7 +10,7 @@ export default defineNuxtConfig({
     // pageTransition: { name: 'page', mode: 'out-in' },
     head: {
       htmlAttrs: {
-        lang: 'zh-CN',
+        lang: 'zh-Hans-CN',
       },
       // 禁止移动端缩放
       viewport:
@@ -38,8 +38,15 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@tdesign-vue-next/nuxt',
   ],
+  colorMode: {
+    classSuffix: '',
+    preference: 'light',
+    fallback: 'light',
+    storage: 'cookie',
+    storageKey: 'this-any-theme',
+  },
   tdesign: {
-    // 从“tdesign-icons-vue-next”解析单个图标组件
+    // 解析单个图标组件
     resolveIcons: true,
   },
   css: [

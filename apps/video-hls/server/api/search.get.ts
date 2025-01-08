@@ -1,6 +1,5 @@
 import * as cheerio from 'cheerio'
-import { FETCH_HEADERS, GYING_API, IMAGE_CDN, IMAGE_SERVICE } from '~/constants/gying'
-
+import { FETCH_HEADERS, IMAGE_SERVICE, IMAGE_CDN, GYING_API } from '#shared/constants/gying'
 export default defineEventHandler((event) => {
   const query = getQuery<{
     no: string

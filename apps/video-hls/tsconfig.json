@@ -1,5 +1,6 @@
 {
   // https://nuxt.com/docs/guide/concepts/typescript
   "extends": "./.nuxt/tsconfig.json",
+  // @see https://tdesign.tencent.com/vue-next/getting-started#%E7%BC%96%E8%BE%91%E5%99%A8%E6%8F%90%E7%A4%BA
   "includes": ["node_modules/tdesign-vue-next/global.d.ts"]
 }

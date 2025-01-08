@@ -1,5 +1,5 @@
 {
-  // *** 字体
+  // 字体
   "editor.fontFamily": "JetBrains Mono, Monaco, 'Courier New', monospace , MesloLGs NF",
   // 当窗口失去焦点时，会自动保存具有更改的编辑器
   "files.autoSave": "onWindowChange",
