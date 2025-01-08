@@ -1,5 +1,11 @@
 <script setup lang="tsx">
-import { CatIcon, CenterFocusStrongIcon, Film1Icon, MovieClapperIcon } from 'tdesign-icons-vue-next'
+import {
+  CatIcon,
+  CenterFocusStrongIcon,
+  Film1Icon,
+  MovieClapperIcon,
+  VideoCamera2Icon,
+} from 'tdesign-icons-vue-next'
 const route = useRoute()
 const { colorMode, changeTheme } = useTheme()
 const menuDrawerVisible = ref<boolean>(false)
@@ -14,7 +20,7 @@ const menu = [
   {
     title: '电影',
     path: '/list-mv/1',
-    icon: () => <MovieClapperIcon />,
+    icon: () => <VideoCamera2Icon />,
     type: 'mv',
   },
   {
@@ -77,7 +83,13 @@ watch(searchValue, () => {
       >
         <TMenu :value="pageType" width="200px">
           <template #logo>
-            <h1>TODO:LOGO</h1>
+            <NuxtLink
+              to="/"
+              class="flex items-center flex-row text-[rgba(0,0,0,.6)] hover:(text-[--td-brand-color]) transition-all duration-300"
+            >
+              <MovieClapperIcon size="28" class="mx-2" />
+              <div class="pr-8 text-6 fw-600">ThisAny</div>
+            </NuxtLink>
           </template>
           <TMenuItem v-for="i in menu" :key="i.path" :icon="i.icon" :value="i.type">
             {{ i.title }}
@@ -90,7 +102,13 @@ watch(searchValue, () => {
       <div class="mx-auto h-full max-w-screen-xl flex items-center justify-between px-2 md:px">
         <div class="flex flex-1 items-center">
           <div class="hidden w-full items-center md:flex">
-            <div class="pr">TODO:LOGO</div>
+            <NuxtLink
+              to="/"
+              class="flex items-center flex-row text-[rgba(0,0,0,.6)] hover:(text-[--td-brand-color]) transition-all duration-300"
+            >
+              <MovieClapperIcon size="28" class="mx-2" />
+              <div class="pr-8 text-6 fw-600">ThisAny</div>
+            </NuxtLink>
             <TPopup
               trigger="focus"
               destroy-on-close
