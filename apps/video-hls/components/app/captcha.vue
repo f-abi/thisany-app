@@ -4,16 +4,13 @@ const props = defineProps<{
   id: string
   check: boolean
 }>()
-
 const emit = defineEmits<{
   complete: []
 }>()
-
 const visible = ref<boolean>(false)
 const canvasRef = useTemplateRef<HTMLCanvasElement>('CanvasRef')
 const clickPositions = ref<{ x: number; y: number }[]>([])
 const submitLoading = ref<boolean>(false)
-
 const { data, refresh, status } = useAsyncData(
   () =>
     $fetch<GYING.Captcha>('/api/captcha', {
@@ -28,7 +25,6 @@ const { data, refresh, status } = useAsyncData(
     deep: true,
   },
 )
-
 const drawImage = () => {
   if (canvasRef.value && status.value === 'success' && data.value) {
     const ctx = canvasRef.value.getContext('2d')
@@ -45,7 +41,6 @@ const drawImage = () => {
     }
   }
 }
-
 const canvasClick = (event: MouseEvent) => {
   if (canvasRef.value) {
     const canvas = canvasRef.value
@@ -79,12 +74,10 @@ const canvasClick = (event: MouseEvent) => {
     }
   }
 }
-
 const positionClick = (index: number) => {
   if (index === 1) clickPositions.value.pop()
   else clickPositions.value = []
 }
-
 async function handleLoad() {
   clickPositions.value = []
   await refresh()

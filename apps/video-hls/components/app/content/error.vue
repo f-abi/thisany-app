@@ -6,9 +6,7 @@ defineProps<{
 </script>
 
 <template>
-  <div
-    class="min-h-[calc(100vh-var(--td-comp-size-xxxl)-2rem)] w-full center flex-col b b-[--td-component-border] bg-[--td-bg-color-container] px-2 py-2 md:(mb px py)"
-  >
+  <div class="state-box">
     <DataErrorIcon size="32" />
     <div class="m-1 fw-600">
       {{ error?.data?.message ?? '服务发生错误' }}

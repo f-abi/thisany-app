@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { AsyncDataRequestStatus } from '#app'
-
 defineProps<{
   status: AsyncDataRequestStatus
   error?: any | undefined
