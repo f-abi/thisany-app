@@ -38,6 +38,7 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@tdesign-vue-next/nuxt',
   ],
+  plugins: ['@/plugins/tdesign-theme.ts'],
   colorMode: {
     classSuffix: '',
     preference: 'light',
