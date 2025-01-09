@@ -46,8 +46,14 @@ watch(
   },
 )
 
+const searchScreen = ref<boolean>(false)
 const searchValue = ref<string>('')
-const { data, refresh, status } = useAsyncData<Array<APP.MovieAsyncSearch>>(
+const searchInput = useTemplateRef<HTMLInputElement>('SearchInput')
+const openSearchScreen = () => {
+  searchScreen.value = true
+  searchInput.value?.focus()
+}
+const { data, refresh } = useAsyncData<Array<APP.MovieAsyncSearch>>(
   'search',
   () =>
     $fetch('/api/search', {
@@ -58,19 +64,98 @@ const { data, refresh, status } = useAsyncData<Array<APP.MovieAsyncSearch>>(
     immediate: false,
   },
 )
-
-async function handleEnter() {
-  await navigateTo(`/search/${searchValue.value}/1`)
-}
-
-watch(searchValue, () => {
-  refresh()
+watch(searchValue, (newValue) => {
+  if (newValue.length > 0) {
+    refresh()
+  }
 })
 </script>
 
 <template>
   <TLayout>
     <ClientOnly>
+      <Teleport to="#teleports">
+        <div
+          class="pos-fixed top-0 left-0 w-full h-full z-999 backdrop-blur-[4px] backdrop-saturate-[180%] bg-opacity-50 bg-black transition-opacity duration-300 ease-in-out"
+          :class="{
+            'opacity-100 pointer-events-auto': searchScreen,
+            'opacity-0 pointer-events-none': !searchScreen,
+          }"
+          @click="searchScreen = !searchScreen"
+        >
+          <div
+            class="mx-auto w-full max-w-screen-xl flex items-center justify-end"
+            @click.stop.prevent
+          >
+            <div class="w-full px-2 py-2 md:(max-w-[calc(100%-11rem)] px py)">
+              <div class="bg-[--td-bg-color-container] p-4 b b-[--td-component-border] rounded-xl">
+                <TInput
+                  ref="SearchInput"
+                  v-model="searchValue"
+                  clearable
+                  placeholder="请输入影片名称"
+                >
+                  <template #prefix-icon>
+                    <SearchIcon />
+                  </template>
+                </TInput>
+                <TList class="max-h-500px min-h-120px">
+                  <TListItem v-if="searchValue.length > 0" class="!p-2">
+                    <div
+                      class="w-full flex items-center justify-between text-[--td-text-color-primary]"
+                    >
+                      <div class="flex items-center flex-row">
+                        <SearchIcon size="16" />
+                        <div>{{ searchValue }}</div>
+                      </div>
+                      <div>搜索全站</div>
+                    </div>
+                  </TListItem>
+                  <template v-if="data">
+                    <TListItem v-for="item in data" :key="item.id" class="!p-0">
+                      <NuxtLink
+                        :to="`/detail-${item.dir}/${item.id}`"
+                        class="mt-1 w-full md:hover:bg-[--td-bg-color-secondarycontainer]"
+                      >
+                        <div class="w-full flex flex-row justify-between">
+                          <div class="h-[120px] w-[80px] bg-[--td-bg-color-secondarycontainer] p-1">
+                            <TImage
+                              class="h-[112px] w-[72px]"
+                              lazy
+                              fit="cover"
+                              error="加载失败"
+                              :src="item.image"
+                              :alt="item.title"
+                            />
+                          </div>
+                          <div
+                            class="min-h-[120px] w-[292px] flex flex-col justify-between text-[12px] text-[--td-text-color-secondary]"
+                          >
+                            <div class="flex flex-col">
+                              <div class="text-4 text-[--td-text-color-primary]">
+                                {{ item.title }}
+                              </div>
+                              <div>
+                                {{ item.ename }}
+                              </div>
+                            </div>
+                            <div>
+                              <div class="text-[--td-text-color-primary]">
+                                {{ item.year }}
+                              </div>
+                              <div>{{ item.type }}</div>
+                            </div>
+                          </div>
+                        </div>
+                      </NuxtLink>
+                    </TListItem>
+                  </template>
+                </TList>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Teleport>
       <TDrawer
         v-model:visible="menuDrawerVisible"
         size="232px"
@@ -109,85 +194,17 @@ watch(searchValue, () => {
               <MovieClapperIcon size="28" class="mx-2" />
               <div class="pr-8 text-6 fw-600">ThisAny</div>
             </NuxtLink>
-            <TPopup
-              trigger="focus"
-              destroy-on-close
-              placement="bottom"
-              :overlay-inner-style="(triggerElem) => ({ width: `${triggerElem.offsetWidth}px` })"
+            <TInput
+              v-model="searchValue"
+              clearable
+              placeholder="请输入影片名称"
+              class="max-w-md"
+              @click="openSearchScreen"
             >
-              <TInput
-                v-model="searchValue"
-                clearable
-                placeholder="请输入影片名称"
-                class="max-w-md"
-                @enter="handleEnter"
-              >
-                <template #prefix-icon>
-                  <SearchIcon />
-                </template>
-              </TInput>
-              <template #content>
-                <TLoading
-                  :loading="status === 'pending' || status === 'idle'"
-                  size="small"
-                  show-overlay
-                >
-                  <TList class="max-h-500px min-h-120px">
-                    <template v-if="data && data?.length > 0">
-                      <TListItem v-for="item in data" :key="item.id" class="!p-0">
-                        <NuxtLink
-                          :to="`/detail-${item.dir}/${item.id}`"
-                          class="mt-1 w-full md:hover:bg-[--td-bg-color-secondarycontainer]"
-                        >
-                          <div class="w-full flex flex-row justify-between">
-                            <div
-                              class="h-[120px] w-[80px] bg-[--td-bg-color-secondarycontainer] p-1"
-                            >
-                              <TImage
-                                class="h-[112px] w-[72px]"
-                                lazy
-                                fit="cover"
-                                error="加载失败"
-                                :src="item.image"
-                                :alt="item.title"
-                              />
-                            </div>
-                            <div
-                              class="min-h-[120px] w-[292px] flex flex-col justify-between text-[12px] text-[--td-text-color-secondary]"
-                            >
-                              <div class="flex flex-col">
-                                <div class="text-4 text-[--td-text-color-primary]">
-                                  {{ item.title }}
-                                </div>
-                                <div>
-                                  {{ item.ename }}
-                                </div>
-                              </div>
-                              <div>
-                                <div class="text-[--td-text-color-primary]">
-                                  {{ item.year }}
-                                </div>
-                                <div>{{ item.type }}</div>
-                              </div>
-                            </div>
-                          </div>
-                        </NuxtLink>
-                      </TListItem>
-                    </template>
-                    <template v-else>
-                      <TListItem class="!p-0">
-                        <div
-                          v-if="status !== 'pending'"
-                          class="h-[120px] w-full center text-[--td-text-color-primary]"
-                        >
-                          暂无数据
-                        </div>
-                      </TListItem>
-                    </template>
-                  </TList>
-                </TLoading>
+              <template #prefix-icon>
+                <SearchIcon />
               </template>
-            </TPopup>
+            </TInput>
           </div>
           <div class="w-full flex items-center md:hidden">
             <TButton variant="text" @click="menuDrawerVisible = true">
@@ -200,7 +217,7 @@ watch(searchValue, () => {
         </div>
         <div class="flex items-center">
           <div class="md:hidden">
-            <TButton variant="text">
+            <TButton variant="text" @click="openSearchScreen">
               <template #icon>
                 <SearchIcon />
               </template>
