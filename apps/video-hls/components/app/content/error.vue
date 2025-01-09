@@ -7,7 +7,7 @@ defineProps<{
 
 <template>
   <div
-    class="min-h-[calc(100vh-var(--td-comp-size-xxxl)-2rem)] w-full flex flex-col items-center justify-center b b-[--td-component-border] bg-[--td-bg-color-container] px-2 py-2 md:(mb px py)"
+    class="min-h-[calc(100vh-var(--td-comp-size-xxxl)-2rem)] w-full center flex-col b b-[--td-component-border] bg-[--td-bg-color-container] px-2 py-2 md:(mb px py)"
   >
     <DataErrorIcon size="32" />
     <div class="m-1 fw-600">

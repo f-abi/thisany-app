@@ -78,14 +78,14 @@ if (playStatus.value === 'success' && play.value && play.value.playList.length >
               </p>
               <p v-if="data.daoyan" class="overflow-hidden text-ellipsis whitespace-nowrap">
                 <span class="text-[--td-text-color-secondary]">导演：</span>
-                <template v-for="(item, index) in data.leixing" :key="index">
+                <template v-for="(item, index) in data.daoyan" :key="index">
                   <span>{{ item }}</span>
                   <span v-if="index < data.daoyan.length - 1">&nbsp;/&nbsp;</span>
                 </template>
               </p>
               <p v-if="data.bianju" class="overflow-hidden text-ellipsis whitespace-nowrap">
                 <span class="text-[--td-text-color-secondary]">编剧：</span>
-                <template v-for="(item, index) in data.leixing" :key="index">
+                <template v-for="(item, index) in data.bianju" :key="index">
                   <span>{{ item }}</span>
                   <span v-if="index < data.bianju.length - 1">&nbsp;/&nbsp;</span>
                 </template>

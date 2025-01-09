@@ -85,7 +85,7 @@ watch(searchValue, () => {
           <template #logo>
             <NuxtLink
               to="/"
-              class="flex items-center flex-row text-[rgba(0,0,0,.6)] hover:(text-[--td-brand-color]) transition-all duration-300"
+              class="flex items-center flex-row text-[--td-text-color-primary] hover:(text-[--td-brand-color]) transition-all duration-300"
             >
               <MovieClapperIcon size="28" class="mx-2" />
               <div class="pr-8 text-6 fw-600">ThisAny</div>
@@ -104,7 +104,7 @@ watch(searchValue, () => {
           <div class="hidden w-full items-center md:flex">
             <NuxtLink
               to="/"
-              class="flex items-center flex-row text-[rgba(0,0,0,.6)] hover:(text-[--td-brand-color]) transition-all duration-300"
+              class="flex items-center flex-row text-[--td-text-color-primary] hover:(text-[--td-brand-color]) transition-all duration-300"
             >
               <MovieClapperIcon size="28" class="mx-2" />
               <div class="pr-8 text-6 fw-600">ThisAny</div>
