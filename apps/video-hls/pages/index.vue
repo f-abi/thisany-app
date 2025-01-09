@@ -2,9 +2,7 @@
 useHead({
   title: '首页-影片推荐',
 })
-
 const data = useState<APP.Home>('indexData')
-
 try {
   await callOnce(async () => {
     data.value = await $fetch<APP.Home>('/api/home')
@@ -12,7 +10,6 @@ try {
 } catch {
   showError('加载失败 请刷新页面')
 }
-
 async function handleChange(index: number) {
   data.value.recommend[index].loading = true
   const type = data.value.recommend[index].type

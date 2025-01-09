@@ -5,7 +5,8 @@ const { execSync } = require('child_process')
 const scopes = fs
   .readdirSync(path.resolve(__dirname, 'apps'), { withFileTypes: true })
   .filter((dirent) => dirent.isDirectory())
-  .map((dirent) => dirent.name.replace(/s$/, ''))
+  .map((dirent) => dirent.name)
+// .map((dirent) => dirent.name.replace(/s$/, ''))
 
 // precomputed scope
 const scopeComplete = execSync('git status --porcelain || true')

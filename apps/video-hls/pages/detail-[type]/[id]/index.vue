@@ -1,6 +1,9 @@
 <script setup lang="tsx">
+import { DB_URL, IM_URL, RT_URL } from '#shared/constants/gying'
+useHead({
+  title: '影片详情',
+})
 const { type, id } = useRoute().params
-
 definePageMeta({
   middleware: [
     'check-type',
@@ -9,13 +12,13 @@ definePageMeta({
     },
   ],
 })
-
 const tab = ref('')
-
 const { data, status, error, refresh } = await useFetch<APP.Movie>('/api/details', {
   params: { type, id },
 })
-
+const introduceRef = useTemplateRef<HTMLElement>('IntroduceRef')
+const introduceExpand = ref<boolean>(false)
+const { height: introduceContentHeight } = useElementSize(introduceRef)
 const {
   data: play,
   status: playStatus,
@@ -24,7 +27,6 @@ const {
 } = await useFetch<APP.MovieResource>('/api/resource', {
   params: { type, id },
 })
-
 if (playStatus.value === 'success' && play.value && play.value.playList.length > 0) {
   tab.value = play.value.playList[0].i
 }
@@ -60,17 +62,162 @@ if (playStatus.value === 'success' && play.value && play.value.playList.length >
               </p>
             </div>
             <div>
-              <!-- <AppDetailInfoBase v-if="data.diqu" title="地区：" :items="data.diqu" />
-              <AppDetailInfoBase v-if="data.leixing" title="类型：" :items="data.leixing" />
-              <AppDetailInfoBase v-if="data.daoyan" title="导演：" :items="data.daoyan" />
-              <AppDetailInfoBase v-if="data.bianju" title="编剧：" :items="data.bianju" />
-              <AppDetailInfoBase v-if="data.zhuyan" title="主演：" :items="data.zhuyan" />
-              <AppDetailInfoTime :data="data" class="hidden sm:block" /> -->
+              <p v-if="data.diqu" class="overflow-hidden text-ellipsis whitespace-nowrap">
+                <span class="text-[--td-text-color-secondary]">地区：</span>
+                <template v-for="(item, index) in data.diqu" :key="index">
+                  <span>{{ item }}</span>
+                  <span v-if="index < data.diqu.length - 1">&nbsp;/&nbsp;</span>
+                </template>
+              </p>
+              <p v-if="data.leixing" class="overflow-hidden text-ellipsis whitespace-nowrap">
+                <span class="text-[--td-text-color-secondary]">类型：</span>
+                <template v-for="(item, index) in data.leixing" :key="index">
+                  <span>{{ item }}</span>
+                  <span v-if="index < data.leixing.length - 1">&nbsp;/&nbsp;</span>
+                </template>
+              </p>
+              <p v-if="data.daoyan" class="overflow-hidden text-ellipsis whitespace-nowrap">
+                <span class="text-[--td-text-color-secondary]">导演：</span>
+                <template v-for="(item, index) in data.leixing" :key="index">
+                  <span>{{ item }}</span>
+                  <span v-if="index < data.daoyan.length - 1">&nbsp;/&nbsp;</span>
+                </template>
+              </p>
+              <p v-if="data.bianju" class="overflow-hidden text-ellipsis whitespace-nowrap">
+                <span class="text-[--td-text-color-secondary]">编剧：</span>
+                <template v-for="(item, index) in data.leixing" :key="index">
+                  <span>{{ item }}</span>
+                  <span v-if="index < data.bianju.length - 1">&nbsp;/&nbsp;</span>
+                </template>
+              </p>
+              <p v-if="data.zhuyan" class="overflow-hidden text-ellipsis whitespace-nowrap">
+                <span class="text-[--td-text-color-secondary]">主演：</span>
+                <template v-for="(item, index) in data.zhuyan" :key="index">
+                  <span>{{ item }}</span>
+                  <span v-if="index < data.zhuyan.length - 1">&nbsp;/&nbsp;</span>
+                </template>
+              </p>
+              <div class="hidden sm:block">
+                <div v-if="data.stime" class="overflow-hidden text-ellipsis whitespace-nowrap">
+                  <span class="text-[--td-text-color-secondary]">{{
+                    data.dir === 'mv' ? '上映：' : '首播：'
+                  }}</span>
+                  <span>{{ data.stime }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="max-w-[50%] overflow-hidden text-ellipsis whitespace-nowrap">
+                    <span class="text-[--td-text-color-secondary]">片长：</span>
+                    <span>{{ data.times ?? '暂无信息' }}</span>
+                  </div>
+                  <div class="flex flex-row fw-500">
+                    <template v-if="data.pf">
+                      <NuxtLink
+                        v-if="data.pf.db"
+                        :to="DB_URL + data.pf.db.id"
+                        class="mr-2 text-[--td-success-color]"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        <span>豆瓣</span>
+                        <span v-if="data.pf.db.s">&nbsp;{{ data.pf.db.s }}</span>
+                      </NuxtLink>
+                      <NuxtLink
+                        v-if="data.pf.im"
+                        :to="IM_URL + data.pf.im.id"
+                        class="mr-2 text-[--td-warning-color]"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        <span>IM</span>
+                        <span v-if="data.pf.im.s">&nbsp;{{ data.pf.im.s }}</span>
+                      </NuxtLink>
+                      <NuxtLink
+                        v-if="data.pf.ro"
+                        :to="RT_URL + (data.dir === 'mv' ? 'm/' : 'tv/') + data.pf.ro.id"
+                        class="text-[--td-error-color]"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        <span>RT</span>
+                        <span v-if="data.pf.ro.x1">&nbsp;{{ data.pf.ro.x1 }}%</span>
+                      </NuxtLink>
+                    </template>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <!-- <AppDetailInfoTime :data="data" class="sm:hidden" />
-        <AppDetailInfoIntroduce :data="data" /> -->
+        <div class="sm:hidden">
+          <div v-if="data.stime" class="overflow-hidden text-ellipsis whitespace-nowrap">
+            <span class="text-[--td-text-color-secondary]">{{
+              data.dir === 'mv' ? '上映：' : '首播：'
+            }}</span>
+            <span>{{ data.stime }}</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="max-w-[50%] overflow-hidden text-ellipsis whitespace-nowrap">
+              <span class="text-[--td-text-color-secondary]">片长：</span>
+              <span>{{ data.times ?? '暂无信息' }}</span>
+            </div>
+            <div class="flex flex-row fw-500">
+              <template v-if="data.pf">
+                <NuxtLink
+                  v-if="data.pf.db"
+                  :to="DB_URL + data.pf.db.id"
+                  class="mr-2 text-[--td-success-color]"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <span>豆瓣</span>
+                  <span v-if="data.pf.db.s">&nbsp;{{ data.pf.db.s }}</span>
+                </NuxtLink>
+                <NuxtLink
+                  v-if="data.pf.im"
+                  :to="IM_URL + data.pf.im.id"
+                  class="mr-2 text-[--td-warning-color]"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <span>IM</span>
+                  <span v-if="data.pf.im.s">&nbsp;{{ data.pf.im.s }}</span>
+                </NuxtLink>
+                <NuxtLink
+                  v-if="data.pf.ro"
+                  :to="RT_URL + (data.dir === 'mv' ? 'm/' : 'tv/') + data.pf.ro.id"
+                  class="text-[--td-error-color]"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <span>RT</span>
+                  <span v-if="data.pf.ro.x1">&nbsp;{{ data.pf.ro.x1 }}%</span>
+                </NuxtLink>
+              </template>
+            </div>
+          </div>
+        </div>
+        <div v-if="data.introduce">
+          <div
+            class="max-h-[44px] overflow-hidden transition-all"
+            :class="{ 'max-h-[999px]': introduceExpand }"
+          >
+            <div ref="IntroduceRef" class="break-all text-[--td-text-color-secondary]">
+              <span>简介：</span>
+              <span v-html="data.introduce" />
+            </div>
+          </div>
+          <div v-if="introduceContentHeight > 44" class="w-full flex items-center justify-center">
+            <t-button size="small" variant="text" @click="introduceExpand = !introduceExpand">
+              <template #icon>
+                <ArrowDownIcon
+                  class="rotate-0 transition-all"
+                  :class="{ 'rotate-180': introduceExpand }"
+                />
+              </template>
+              {{ introduceExpand ? '收起' : '更多简介' }}
+            </t-button>
+          </div>
+        </div>
       </div>
       <div
         v-if="data.xle"
@@ -151,7 +298,7 @@ if (playStatus.value === 'success' && play.value && play.value.playList.length >
           </TCollapsePanel>
         </TCollapse>
         <ClientOnly>
-          <Captcha
+          <AppCaptcha
             :id="data.id"
             :check="play!.isCaptcha"
             :type="data.dir"

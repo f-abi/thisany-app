@@ -1,4 +1,7 @@
 <script setup lang="ts">
+useHead({
+  title: '影片播发',
+})
 const { type, id, pid, episodes } = useRoute().params
 const { data, status, error, refresh } = await useFetch<APP.MoviePlayer>('/api/player', {
   params: {
@@ -17,27 +20,27 @@ async function handleEnded() {
 </script>
 
 <template>
-  <AppContent :status="status" :error="error" :refresh="refresh">
+  <AppContentState :status="status" :error="error" :refresh="refresh">
     <template v-if="data">
       <div
         class="mb-2 b b-[--td-component-border] bg-[--td-bg-color-container] px-2 py-2 md:(mb px py)"
       >
         <div class="grid grid-cols-1 h-full w-[80%] w-full">
           <ClientOnly>
-            <AppVideo
+            <AppVideoPlayer
               :title="`${data.title} ${data.playlist[data.select].list[data.page] ?? ''}`"
               :src="data.url"
               @ended="handleEnded"
             />
             <template #placeholder>
-              <Skeleton class="aspect-ratio-16/9" />
+              <AppSkeleton class="aspect-ratio-16/9" />
             </template>
           </ClientOnly>
         </div>
       </div>
       <div class="mb-2 b b-[--td-component-border] bg-[--td-bg-color-container] md:(mb)">
-        <t-tabs v-model="tab">
-          <t-tab-panel v-for="item in data.playlist" :key="item.i" :value="item.i" :label="item.t">
+        <TTabs v-model="tab">
+          <TTabPanel v-for="item in data.playlist" :key="item.i" :value="item.i" :label="item.t">
             <div class="grid grid-cols-4 gap-2 px-2 py-2 md:(px py)">
               <NuxtLink
                 v-for="(p, pIndex) in item.list"
@@ -54,9 +57,9 @@ async function handleEnded() {
                 </span>
               </NuxtLink>
             </div>
-          </t-tab-panel>
-        </t-tabs>
+          </TTabPanel>
+        </TTabs>
       </div>
     </template>
-  </AppContent>
+  </AppContentState>
 </template>
