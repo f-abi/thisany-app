@@ -25,7 +25,7 @@ export default defineEventHandler((event) => {
       info: query.info,
     }).toString(),
     onResponse({ response }) {
-      if (response._data !== '1') {
+      if (response._data?.code !== 200) {
         throw createError({
           statusCode: 400,
           statusMessage: 'Bad Request',
