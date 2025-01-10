@@ -1,4 +1,4 @@
-import { FETCH_HEADERS, GYING_API, TYPE } from '#shared/constants/gying'
+import { FETCH_HEADERS, GYING_API, TYPE } from '~/constants/gying'
 export default defineEventHandler((event) => {
   const query = getQuery<{
     id: string

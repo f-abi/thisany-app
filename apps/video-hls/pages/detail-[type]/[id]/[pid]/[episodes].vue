@@ -1,7 +1,4 @@
 <script setup lang="ts">
-useHead({
-  title: '影片播发',
-})
 const { type, id, pid, episodes } = useRoute().params
 const { data, status, error, refresh } = await useFetch<APP.MoviePlayer>('/api/player', {
   params: {
@@ -10,6 +7,11 @@ const { data, status, error, refresh } = await useFetch<APP.MoviePlayer>('/api/p
     pid,
     episodes,
   },
+})
+useHead({
+  title: data.value
+    ? `${data.value.title} ${data.value.playlist[data.value.select].list[data.value.page]}`
+    : '播发',
 })
 const tab = ref(pid as string)
 async function handleEnded() {

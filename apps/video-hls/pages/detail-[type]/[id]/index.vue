@@ -1,8 +1,5 @@
 <script setup lang="tsx">
-import { DB_URL, IM_URL, RT_URL } from '#shared/constants/gying'
-useHead({
-  title: '影片详情',
-})
+import { DB_URL, IM_URL, RT_URL } from '~/constants/gying'
 const { type, id } = useRoute().params
 definePageMeta({
   middleware: [
@@ -15,6 +12,9 @@ definePageMeta({
 const tab = ref('')
 const { data, status, error, refresh } = await useFetch<APP.Movie>('/api/details', {
   params: { type, id },
+})
+useHead({
+  title: data.value?.title,
 })
 const introduceRef = useTemplateRef<HTMLElement>('IntroduceRef')
 const introduceExpand = ref<boolean>(false)

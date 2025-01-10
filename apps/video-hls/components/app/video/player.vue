@@ -2,7 +2,7 @@
 import Player, { Events, Plugin } from 'xgplayer'
 import HlsPlugin from 'xgplayer-hls'
 import 'xgplayer/dist/index.min.css'
-import { PLAY_TIME_RECORDING_KEY } from '#shared/constants/app'
+import { PLAY_TIME_RECORDING_KEY } from '~/constants/app'
 const props = defineProps<{
   title: string
   src: string

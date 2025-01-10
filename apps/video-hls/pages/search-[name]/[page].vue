@@ -1,5 +1,8 @@
 <script lang="ts" setup>
 import type { PageInfo } from 'tdesign-vue-next'
+useHead({
+  title: '搜索影片',
+})
 const { name, page } = useRoute().params
 const { data, status, error, refresh } = await useFetch<APP.MovieSearch>('/api/search', {
   params: {
