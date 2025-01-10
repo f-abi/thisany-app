@@ -10,6 +10,7 @@ const route = useRoute()
 const { colorMode, changeTheme } = useTheme()
 const menuDrawerVisible = ref<boolean>(false)
 const pageType = ref((route.params.type as string) ?? 'index')
+const isLocked = useScrollLock(window)
 const menu = [
   {
     title: '首页',
@@ -36,24 +37,26 @@ const menu = [
     type: 'ac',
   },
 ]
-
-watch(
-  () => route.path,
-  async () => {
-    await nextTick()
-    pageType.value = (route.params.type as string) ?? 'index'
-    menuDrawerVisible.value = false
-  },
-)
-
+const scrollbarWidth = ref<number>(0)
 const searchScreen = ref<boolean>(false)
 const searchValue = ref<string>('')
 const searchInput = useTemplateRef<HTMLInputElement>('SearchInput')
 const openSearchScreen = () => {
   searchScreen.value = true
   searchInput.value?.focus()
+  scrollbarWidth.value = window.innerWidth - document.documentElement.clientWidth
+  if (scrollbarWidth.value > 0) {
+    document.body.style.paddingRight = `${scrollbarWidth.value}px`
+  }
+  isLocked.value = true
 }
-const { data, refresh } = useAsyncData<Array<APP.MovieAsyncSearch>>(
+const closeSearchScreen = () => {
+  searchScreen.value = false
+  isLocked.value = false
+  scrollbarWidth.value = 0
+  document.body.style.paddingRight = ''
+}
+const { data, refresh, status } = useAsyncData<Array<APP.MovieAsyncSearch>>(
   'search',
   () =>
     $fetch('/api/search', {
@@ -62,6 +65,15 @@ const { data, refresh } = useAsyncData<Array<APP.MovieAsyncSearch>>(
     }),
   {
     immediate: false,
+  },
+)
+watch(
+  () => route.path,
+  async () => {
+    await nextTick()
+    pageType.value = (route.params.type as string) ?? 'index'
+    menuDrawerVisible.value = false
+    closeSearchScreen()
   },
 )
 watch(searchValue, (newValue) => {
@@ -76,81 +88,108 @@ watch(searchValue, (newValue) => {
     <ClientOnly>
       <Teleport to="#teleports">
         <div
-          class="pos-fixed top-0 left-0 w-full h-full z-999 backdrop-blur-[4px] backdrop-saturate-[180%] bg-opacity-50 bg-black transition-opacity duration-300 ease-in-out"
+          class="pos-fixed top-0 w-full pr-[--app-scroll-width] left-0 h-full z-999 backdrop-blur-[4px] backdrop-saturate-[180%] bg-opacity-50 bg-black transition-opacity duration-300 ease-in-out"
           :class="{
             'opacity-100 pointer-events-auto': searchScreen,
             'opacity-0 pointer-events-none': !searchScreen,
           }"
-          @click="searchScreen = !searchScreen"
+          :style="{ '--app-scroll-width': scrollbarWidth + 'px' }"
+          @click="closeSearchScreen"
         >
           <div
             class="mx-auto w-full max-w-screen-xl flex items-center justify-end"
             @click.stop.prevent
           >
             <div class="w-full px-2 py-2 md:(max-w-[calc(100%-11rem)] px py)">
-              <div class="bg-[--td-bg-color-container] p-4 b b-[--td-component-border] rounded-xl">
+              <div
+                class="bg-[--td-bg-color-container] b b-[--td-component-border] rounded-xl overflow-hidden"
+              >
                 <TInput
                   ref="SearchInput"
                   v-model="searchValue"
+                  class="p-4"
                   clearable
                   placeholder="请输入影片名称"
+                  type="search"
+                  inputmode="search"
+                  @enter="searchInput?.blur()"
                 >
                   <template #prefix-icon>
                     <SearchIcon />
                   </template>
                 </TInput>
-                <TList class="max-h-500px min-h-120px">
-                  <TListItem v-if="searchValue.length > 0" class="!p-2">
-                    <div
-                      class="w-full flex items-center justify-between text-[--td-text-color-primary]"
+                <template v-if="searchValue.length > 0">
+                  <div class="w-full pb-2 px-4 b-b b-[--td-component-border]">
+                    <NuxtLink
+                      :to="`/search-${searchValue}/1`"
+                      class="p-2 rounded-2 flex items-center justify-between text-[--td-text-color-secondary] hover:bg-[--td-bg-color-secondarycontainer]"
                     >
-                      <div class="flex items-center flex-row">
+                      <div class="center flex-row">
                         <SearchIcon size="16" />
-                        <div>{{ searchValue }}</div>
+                        <div
+                          class="ml-2 text-[--td-text-color-primary] text-[1rem] overflow-hidden text-ellipsis whitespace-nowrap w-50vw"
+                        >
+                          {{ searchValue }}
+                        </div>
                       </div>
                       <div>搜索全站</div>
-                    </div>
-                  </TListItem>
-                  <template v-if="data">
-                    <TListItem v-for="item in data" :key="item.id" class="!p-0">
-                      <NuxtLink
-                        :to="`/detail-${item.dir}/${item.id}`"
-                        class="mt-1 w-full md:hover:bg-[--td-bg-color-secondarycontainer]"
-                      >
-                        <div class="w-full flex flex-row justify-between">
-                          <div class="h-[120px] w-[80px] bg-[--td-bg-color-secondarycontainer] p-1">
-                            <TImage
-                              class="h-[112px] w-[72px]"
-                              lazy
-                              fit="cover"
-                              error="加载失败"
-                              :src="item.image"
-                              :alt="item.title"
-                            />
-                          </div>
-                          <div
-                            class="min-h-[120px] w-[292px] flex flex-col justify-between text-[12px] text-[--td-text-color-secondary]"
-                          >
-                            <div class="flex flex-col">
-                              <div class="text-4 text-[--td-text-color-primary]">
-                                {{ item.title }}
-                              </div>
-                              <div>
-                                {{ item.ename }}
-                              </div>
-                            </div>
-                            <div>
-                              <div class="text-[--td-text-color-primary]">
-                                {{ item.year }}
-                              </div>
-                              <div>{{ item.type }}</div>
-                            </div>
-                          </div>
+                    </NuxtLink>
+                  </div>
+                  <TList class="max-h-60vh">
+                    <template v-if="status === 'pending' || status === 'idle'">
+                      <TListItem class="!mx-4 !my-2 !p-0">
+                        <div class="py-4 center w-full">
+                          <TLoading size="24px" />
                         </div>
-                      </NuxtLink>
-                    </TListItem>
-                  </template>
-                </TList>
+                      </TListItem>
+                    </template>
+                    <template v-else>
+                      <template v-if="data">
+                        <template v-if="data.length > 0">
+                          <TListItem v-for="item in data" :key="item.id" class="!mx-4 !my-2 !p-0">
+                            <NuxtLink
+                              :to="`/detail-${item.dir}/${item.id}`"
+                              class="w-full p-2 rounded-2 flex flex-row hover:bg-[--td-bg-color-secondarycontainer]"
+                            >
+                              <TImage
+                                class="h-[120px] w-[80px] mr-2"
+                                lazy
+                                fit="cover"
+                                :src="item.image"
+                                :alt="item.title"
+                              />
+                              <div
+                                class="min-h-[120px] flex flex-col justify-between text-[12px] text-[--td-text-color-secondary] line-height-tight"
+                              >
+                                <div class="flex flex-col">
+                                  <div class="text-4 text-[--td-text-color-primary]">
+                                    {{ item.title }}
+                                  </div>
+                                  <div>
+                                    {{ item.ename }}
+                                  </div>
+                                </div>
+                                <div>
+                                  <div class="text-[--td-text-color-primary]">
+                                    {{ item.year }}
+                                  </div>
+                                  <div>{{ item.type }}</div>
+                                </div>
+                              </div>
+                            </NuxtLink>
+                          </TListItem>
+                        </template>
+                        <template v-else>
+                          <TListItem class="!mx-4 !my-2 !p-0">
+                            <div class="py-4 center w-full">
+                              <TEmpty title="暂无匹配资源，搜全站试试吧～" />
+                            </div>
+                          </TListItem>
+                        </template>
+                      </template>
+                    </template>
+                  </TList>
+                </template>
               </div>
             </div>
           </div>
@@ -196,7 +235,6 @@ watch(searchValue, (newValue) => {
             </NuxtLink>
             <TInput
               v-model="searchValue"
-              clearable
               placeholder="请输入影片名称"
               class="max-w-md"
               @click="openSearchScreen"
