@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TAG } from '~/constants/gying'
+import { TAG } from '~/constants/tag'
 defineProps<{
   data: Array<APP.HomeRecommendData>
 }>()
