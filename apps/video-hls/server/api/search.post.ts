@@ -1,4 +1,4 @@
-import { FETCH_HEADERS, IMAGE_SERVICE, IMAGE_CDN, GYING_API } from '~/constants/gying'
+import { FETCH_HEADERS, IMAGE_SERVICE, IMAGE_CDN, GYING_API, IMAGE_FORMAT } from '~/constants/gying'
 
 export default defineEventHandler((event) => {
   const query = getQuery<{
@@ -20,7 +20,7 @@ export default defineEventHandler((event) => {
     onResponse({ response }) {
       response._data = response._data.map((_: APP.MovieAsyncSearch) => ({
         ..._,
-        image: `${IMAGE_SERVICE}${IMAGE_CDN}/img/${_.dir}/${_.id}.webp&w=320&h=480&fit=cover`,
+        image: `${IMAGE_SERVICE}${IMAGE_CDN}/img/${_.dir}/${_.id}${IMAGE_FORMAT}`,
       }))
     },
   })

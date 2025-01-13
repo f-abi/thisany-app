@@ -1,4 +1,11 @@
-import { FETCH_HEADERS, IMAGE_SERVICE, IMAGE_CDN, GYING_API, TYPE } from '~/constants/gying'
+import {
+  FETCH_HEADERS,
+  IMAGE_SERVICE,
+  IMAGE_CDN,
+  GYING_API,
+  TYPE,
+  IMAGE_FORMAT,
+} from '~/constants/gying'
 export default defineEventHandler((event) => {
   const query = getQuery<{
     page: string
@@ -25,7 +32,7 @@ export default defineEventHandler((event) => {
           tag: data.a[index],
           pf: data.d[index],
           xle: data.g[index],
-          image: `${IMAGE_SERVICE}${IMAGE_CDN}/img/${query.type}/${data.i[index]}.webp&w=320&h=480&fit=cover`,
+          image: `${IMAGE_SERVICE}${IMAGE_CDN}/img/${query.type}/${data.i[index]}${IMAGE_FORMAT}`,
         }))
       } catch {
         throw createError({

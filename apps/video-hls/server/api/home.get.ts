@@ -1,4 +1,4 @@
-import { FETCH_HEADERS, IMAGE_SERVICE, IMAGE_CDN, GYING_API } from '~/constants/gying'
+import { FETCH_HEADERS, IMAGE_SERVICE, IMAGE_CDN, GYING_API, IMAGE_FORMAT } from '~/constants/gying'
 export default defineEventHandler(() =>
   $fetch(GYING_API, {
     headers: {
@@ -32,7 +32,7 @@ export default defineEventHandler(() =>
                 tag: _.a[index],
                 pf: _.d[index],
                 xle: _.g[index],
-                image: `${IMAGE_SERVICE}${IMAGE_CDN}/img/${_.ty}/${_.i[index]}.webp&w=320&h=480&fit=cover`,
+                image: `${IMAGE_SERVICE}${IMAGE_CDN}/img/${_.ty}/${_.i[index]}${IMAGE_FORMAT}`,
               })),
               type: _.ty,
               pageNo: 1,

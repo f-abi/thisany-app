@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio'
-import { FETCH_HEADERS, IMAGE_SERVICE, IMAGE_CDN, GYING_API } from '~/constants/gying'
+import { FETCH_HEADERS, IMAGE_SERVICE, IMAGE_CDN, GYING_API, IMAGE_FORMAT } from '~/constants/gying'
 export default defineEventHandler((event) => {
   const query = getQuery<{
     no: string
@@ -30,7 +30,7 @@ export default defineEventHandler((event) => {
           const type = $(li).find('a').attr('href')?.split('/')[1] || ''
           const id = $(li).find('a').attr('href')?.split('/').pop() || ''
           const content = $(li).find('.int').html()?.trim() || ''
-          const image = `${IMAGE_SERVICE}${IMAGE_CDN}/img/${type}/${id}.webp&w=320&h=480&fit=cover`
+          const image = `${IMAGE_SERVICE}${IMAGE_CDN}/img/${type}/${id}${IMAGE_FORMAT}`
           return { title, content, type, id, image }
         })
         .get()
