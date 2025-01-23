@@ -314,7 +314,10 @@ watch(searchValue, (newValue) => {
         >
           <slot />
           <TFooter>
-            本站所有内容均来自互联网分享站点所提供的公开引用资源，未提供资源上传、存储服务
+            <p>
+              <NuxtLink to="https://beian.miit.gov.cn/">闽ICP备2023007468号-1</NuxtLink>
+            </p>
+            <p>本站所有内容均来自互联网分享站点所提供的公开引用资源，未提供资源上传、存储服务</p>
           </TFooter>
         </main>
       </section>
