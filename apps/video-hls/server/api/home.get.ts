@@ -20,7 +20,7 @@ export default defineEventHandler(() =>
               dir: bannerRaw.y[index],
               diqu: bannerRaw.d[index],
               introduce: bannerRaw.j[index],
-              cover: `${IMAGE_SERVICE}${IMAGE_CDN}/img/${bannerRaw.y[index]}/i_${bannerRaw.i[index]}.webp`,
+              cover: `${IMAGE_SERVICE}${IMAGE_CDN}/img/${bannerRaw.y[index]}/${bannerRaw.i[index]}_i/800.webp`,
               image: `${IMAGE_SERVICE}${IMAGE_CDN}/img/${bannerRaw.y[index]}/${bannerRaw.i[index]}.webp`,
             })),
             recommend: recommendRaw.map<APP.HomeRecommend>((_) => ({
