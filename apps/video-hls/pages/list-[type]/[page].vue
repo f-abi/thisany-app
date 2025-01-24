@@ -3,6 +3,9 @@ import type { PageInfo } from 'tdesign-vue-next'
 useHead({
   title: '影片列表',
 })
+useSeoMeta({
+  description: '影片列表',
+})
 const route = useRoute()
 definePageMeta({
   middleware: [

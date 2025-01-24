@@ -1,9 +1,12 @@
 <script lang="ts" setup>
 import type { PageInfo } from 'tdesign-vue-next'
+const { name, page } = useRoute().params
 useHead({
   title: '搜索影片',
 })
-const { name, page } = useRoute().params
+useSeoMeta({
+  description: `搜索与 ${decodeURIComponent(name as string)} 相关的影片`,
+})
 const { data, status, error, refresh } = await useFetch<APP.MovieSearch>('/api/search', {
   params: {
     name,

@@ -16,6 +16,9 @@ const { data, status, error, refresh } = await useFetch<APP.Movie>('/api/details
 useHead({
   title: data.value?.title,
 })
+useSeoMeta({
+  description: () => `影片：${data.value?.title}-简介：${data.value?.introduce}`,
+})
 const introduceRef = useTemplateRef<HTMLElement>('IntroduceRef')
 const introduceExpand = ref<boolean>(false)
 const { height: introduceContentHeight } = useElementSize(introduceRef)

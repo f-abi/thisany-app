@@ -2,6 +2,9 @@
 useHead({
   title: '首页-影片推荐',
 })
+useSeoMeta({
+  description: '影片推荐',
+})
 const data = useState<APP.Home>('indexData')
 try {
   await callOnce(async () => {

@@ -11,7 +11,12 @@ const { data, status, error, refresh } = await useFetch<APP.MoviePlayer>('/api/p
 useHead({
   title: data.value
     ? `${data.value.title} ${data.value.playlist[data.value.select].list[data.value.page]}`
-    : '播发',
+    : '播放',
+})
+useSeoMeta({
+  description: data.value
+    ? `${data.value.title} ${data.value.playlist[data.value.select].list[data.value.page]}`
+    : '播放',
 })
 const tab = ref(pid as string)
 async function handleEnded() {
