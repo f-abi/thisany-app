@@ -18,7 +18,7 @@ export default defineEventHandler((event) => {
       message: '参数错误',
     })
   }
-  return $fetch(`${GYING_API}/res/${query.type}?page${query.no}`, {
+  return $fetch(`${GYING_API}/res/${query.type}?page=${query.no}`, {
     method: 'GET',
     headers: {
       ...FETCH_HEADERS,
