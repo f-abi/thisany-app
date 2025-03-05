@@ -19,7 +19,7 @@ export default defineEventHandler((event) => {
     },
     onResponse({ response }) {
       try {
-        const data = JSON.parse(response._data) as GYING.Downurl
+        const data = response._data as GYING.Downurl
         const panList: APP.MovieResource['panList'] = data.panlist
           ? data.panlist.tname.map((name) => ({ name, data: [] }))
           : []
