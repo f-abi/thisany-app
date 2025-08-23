@@ -25,7 +25,7 @@ export default defineEventHandler((event) => {
         const detailsMatch = response._data.match(/_obj\.player\s*=\s*(\{.*?\});/s)
         if (detailsMatch) {
           const data = JSON.parse(detailsMatch[1]) as GYING.Player
-          const playList = data.playlist ? calcPlayList(data.playlist) : []
+          const playlist = data.playlist ? calcPlayList(data.playlist) : []
           if (data.url.length === 0) {
             throw createError({
               statusCode: 400,
@@ -35,7 +35,7 @@ export default defineEventHandler((event) => {
           }
           response._data = {
             ...data,
-            playList,
+            playlist,
           }
         } else {
           throw createError({
