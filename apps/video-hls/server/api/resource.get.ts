@@ -1,4 +1,30 @@
 import { FETCH_HEADERS, TYPE, GYING_API } from '~/constants/gying'
+
+const calcList = (data: Array<GYING.Play>): Array<GYING.Play> => {
+  const res = data.map((item) => {
+    const result: string[] = []
+    item.list.forEach((props) => {
+      if (Array.isArray(props)) {
+        const [words, range] = props as unknown as [string[], number | [number, number]]
+        const prefix = words[0] ?? '第'
+        const suffix = words[1] ?? '集'
+        if (Array.isArray(range)) {
+          // 如果是范围 [start, end]
+          const [start, end] = range
+          for (let i = start; i <= end; i++) {
+            result.push(`${prefix}${i}${suffix}`)
+          }
+        } else result.push(`${prefix}${range}${suffix}`)
+      } else result.push(props)
+    })
+    return {
+      ...item,
+      list: result,
+    }
+  })
+  return res
+}
+
 export default defineEventHandler((event) => {
   const query = getQuery<{
     id: string
@@ -20,6 +46,7 @@ export default defineEventHandler((event) => {
     onResponse({ response }) {
       try {
         const data = response._data as GYING.Downurl
+        const playList = data.playlist ? calcList(data.playlist) : []
         const panList: APP.MovieResource['panList'] = data.panlist
           ? data.panlist.tname.map((name) => ({ name, data: [] }))
           : []
@@ -37,7 +64,7 @@ export default defineEventHandler((event) => {
           })
         }
         response._data = {
-          playList: data.playlist ?? [],
+          playList,
           panList,
           isCaptcha: !!data.file?.js,
         } as APP.MovieResource
