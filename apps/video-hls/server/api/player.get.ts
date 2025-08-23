@@ -1,4 +1,5 @@
 import { FETCH_HEADERS, GYING_API, TYPE } from '~/constants/gying'
+import { calcPlayList } from '~/utils'
 export default defineEventHandler((event) => {
   const query = getQuery<{
     id: string
@@ -24,6 +25,7 @@ export default defineEventHandler((event) => {
         const detailsMatch = response._data.match(/_obj\.player\s*=\s*(\{.*?\});/s)
         if (detailsMatch) {
           const data = JSON.parse(detailsMatch[1]) as GYING.Player
+          const playList = data.playlist ? calcPlayList(data.playlist) : []
           if (data.url.length === 0) {
             throw createError({
               statusCode: 400,
@@ -31,7 +33,10 @@ export default defineEventHandler((event) => {
               message: '参数错误',
             })
           }
-          response._data = data
+          response._data = {
+            ...data,
+            playList,
+          }
         } else {
           throw createError({
             statusCode: 400,
