@@ -18,5 +18,5 @@ const PHPSESSID = 'gn9p0edqnkkh8fgevkcfm93pbo'
 export const FETCH_HEADERS = {
   'User-Agent':
     'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
-  Cookie: `BT_auth=${BT_AUTH};BT_cookietime=${BT_COOKIETIME};PHPSESSID=${PHPSESSID};browser_verified=${atob('YTVmMTlmOTFlMmY3YTI1MjMxNDg1OGZkMjhjNTAxMmY=')}`,
+  Cookie: `BT_auth=${BT_AUTH};BT_cookietime=${BT_COOKIETIME};PHPSESSID=${PHPSESSID};browser_verified=${'407ae73bba3c19aafe57334e89d71516'}`,
 }
