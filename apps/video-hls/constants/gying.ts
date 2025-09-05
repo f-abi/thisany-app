@@ -7,7 +7,7 @@ export enum MOVIE_TYPE {
 export const GYING_API = 'https://www.gyg.si'
 export const IMAGE_CDN = 'https://s.tutu.pm'
 export const IMAGE_SERVICE = 'https://images.weserv.nl/?url='
-export const IMAGE_FORMAT = '/320.webp&w=320&h=480&fit=cover'
+export const IMAGE_FORMAT = '/384.webp&w=320&h=480&fit=cover'
 export const DB_URL = 'https://movie.douban.com/subject/'
 export const IM_URL = 'https://www.imdb.com/title/'
 export const RT_URL = 'https://www.rottentomatoes.com/'
