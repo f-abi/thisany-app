@@ -1,7 +1,8 @@
-import { FETCH_HEADERS, TYPE, GYING_API } from '~/constants/gying'
+import { TYPE, GYING_API } from '~/constants/gying'
 import { calcPlayList } from '~/utils'
+import { getDynamicHeader } from '~/utils/header'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   const query = getQuery<{
     id: string
     type: APP.MovieType
@@ -13,10 +14,11 @@ export default defineEventHandler((event) => {
       message: '参数错误',
     })
   }
+  const headers = await getDynamicHeader()
   return $fetch(`${GYING_API}/res/downurl/${query.type}/${query.id}`, {
     method: 'GET',
     headers: {
-      ...FETCH_HEADERS,
+      ...headers,
       Referer: `${GYING_API}/${query.type}/${query.id}`,
     },
     onResponse({ response }) {

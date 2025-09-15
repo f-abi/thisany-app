@@ -1,6 +1,7 @@
-import { FETCH_HEADERS, IMAGE_SERVICE, IMAGE_CDN, GYING_API, IMAGE_FORMAT } from '~/constants/gying'
+import { IMAGE_SERVICE, IMAGE_CDN, GYING_API, IMAGE_FORMAT } from '~/constants/gying'
+import { getDynamicHeader } from '~/utils/header'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   const query = getQuery<{
     name: string
   }>(event)
@@ -11,10 +12,11 @@ export default defineEventHandler((event) => {
       message: '参数错误',
     })
   }
+  const headers = await getDynamicHeader()
   return $fetch(`${GYING_API}/res/s/${encodeURIComponent(query.name)}`, {
     method: 'POST',
     headers: {
-      ...FETCH_HEADERS,
+      ...headers,
       Referer: `${GYING_API}`,
     },
     onResponse({ response }) {

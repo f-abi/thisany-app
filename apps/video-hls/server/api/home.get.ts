@@ -1,8 +1,10 @@
-import { FETCH_HEADERS, IMAGE_SERVICE, IMAGE_CDN, GYING_API, IMAGE_FORMAT } from '~/constants/gying'
-export default defineEventHandler(() =>
-  $fetch(GYING_API, {
+import { IMAGE_SERVICE, IMAGE_CDN, GYING_API, IMAGE_FORMAT } from '~/constants/gying'
+import { getDynamicHeader } from '~/utils/header'
+export default defineEventHandler(async () => {
+  const headers = await getDynamicHeader()
+  return $fetch(GYING_API, {
     headers: {
-      ...FETCH_HEADERS,
+      ...headers,
     },
     onResponse({ response }) {
       // 提取HTML文本中的 _obj.banner
@@ -55,5 +57,5 @@ export default defineEventHandler(() =>
         })
       }
     },
-  }),
-)
+  })
+})

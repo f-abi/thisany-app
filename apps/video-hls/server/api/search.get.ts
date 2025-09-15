@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio'
-import { FETCH_HEADERS, IMAGE_SERVICE, IMAGE_CDN, GYING_API, IMAGE_FORMAT } from '~/constants/gying'
-export default defineEventHandler((event) => {
+import { IMAGE_SERVICE, IMAGE_CDN, GYING_API, IMAGE_FORMAT } from '~/constants/gying'
+import { getDynamicHeader } from '~/utils/header'
+export default defineEventHandler(async (event) => {
   const query = getQuery<{
     no: string
     name: string
@@ -12,10 +13,11 @@ export default defineEventHandler((event) => {
       message: '参数错误',
     })
   }
+  const headers = await getDynamicHeader()
   return $fetch(`${GYING_API}/s/1---${query.no}/${encodeURIComponent(query.name)}`, {
     method: 'GET',
     headers: {
-      ...FETCH_HEADERS,
+      ...headers,
       Referer: `${GYING_API}`,
     },
     onResponse({ response }) {
