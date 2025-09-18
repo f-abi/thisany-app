@@ -251,7 +251,11 @@ export const getDynamicHeader = async (): Promise<any> => {
   ) {
     return {
       'User-Agent': USER_AGENT,
-      Cookie: `${baseCookie};browser_verified=${dynamicHeader.browserVerified}`,
+      Cookie:
+        // 如果验证值为 thisany 那么代表暂未开启验证
+        dynamicHeader.browserVerified === 'thisany'
+          ? baseCookie
+          : `${baseCookie};browser_verified=${dynamicHeader.browserVerified}`,
     }
   }
 
@@ -270,6 +274,19 @@ export const getDynamicHeader = async (): Promise<any> => {
           Cookie: baseCookie,
         },
       })
+      // 判断是否开启验证
+      const hedaer = html.match(/_obj\.header\s*=\s*(\{.*?\});/s)
+      const check = hedaer ? JSON.parse(hedaer[1]) : null
+      // 如果正常返回用户名 那么代表没有开启人机验证
+      if (check?.n === 'thisany') {
+        dynamicHeader.browserVerified = 'thisany'
+        dynamicHeader.expirationAt = Date.now() + 6 * 60 * 60 * 1000
+        return {
+          'User-Agent': USER_AGENT,
+          Cookie: `${baseCookie}`,
+        }
+      }
+      // 否则 解析验证
       const jsonMatch = html.match(/const json=(\{[\s\S]*?\});/)
       const json:
         | ({
