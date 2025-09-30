@@ -14,7 +14,32 @@ export default defineEventHandler(async (event) => {
       message: '参数错误',
     })
   }
-  const headers = await getDynamicHeader()
+
+  let headers = await getDynamicHeader()
+
+  const vrg = await $fetch<string>(`${GYING_API}/${query.type}/${query.id}`, {
+    method: 'GET',
+    headers: {
+      ...headers,
+      Referer: `${GYING_API}`,
+    },
+    onResponse({ response }) {
+      const cookies = response.headers.getSetCookie()
+      const cookieStrings = cookies
+        .map((cookie) => {
+          const match = cookie.match(/^([^=]+)=([^;]+)/)
+          return match ? `${match[1]}=${match[2]}` : ''
+        })
+        .filter(Boolean)
+      response._data = cookieStrings.join(';')
+    },
+  })
+
+  headers = {
+    ...headers,
+    Cookie: `${headers['Cookie']};${vrg}`,
+  }
+
   return $fetch(`${GYING_API}/res/downurl/${query.type}/${query.id}`, {
     method: 'GET',
     headers: {

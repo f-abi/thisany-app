@@ -124,9 +124,10 @@ declare namespace APP {
   /** 搜索列表 */
   interface MovieSearchList {
     title: string
-    content: HTMLDocument
     type: string
     id: string
     image: string
+    ename: string
+    year: number
   }
 }

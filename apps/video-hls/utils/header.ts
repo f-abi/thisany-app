@@ -238,9 +238,14 @@ const dynamicHeader = reactive<{
   expirationAt: undefined,
 })
 
-let dynamicHeaderPromise: Promise<any> | null = null
+interface DynamicHeader {
+  'User-Agent': string
+  Cookie: string
+}
 
-export const getDynamicHeader = async (): Promise<any> => {
+let dynamicHeaderPromise: Promise<DynamicHeader> | null = null
+
+export const getDynamicHeader = async (): Promise<DynamicHeader> => {
   const baseCookie = `BT_auth=${BT_AUTH};BT_cookietime=${BT_COOKIETIME};PHPSESSID=${PHPSESSID}`
 
   // 如果已经有可用缓存，直接返回

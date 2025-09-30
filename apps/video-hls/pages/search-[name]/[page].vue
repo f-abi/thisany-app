@@ -21,8 +21,7 @@ const { data, status, error, refresh } = await useFetch<APP.MovieSearch>('/api/s
       <template v-if="data.total > 0">
         <div class="b b-[--td-component-border] bg-[--td-bg-color-container] px-2 pb-2 md:(px pb)">
           <div class="text-[16px] line-height-tight fw-500 my">
-            为您找到 <span class="mx-1">{{ data.total }}</span
-            >条与
+            为您找到与
             <span class="text-[--td-brand-color] mx-1">{{
               decodeURIComponent(name as string)
             }}</span>
@@ -50,10 +49,13 @@ const { data, status, error, refresh } = await useFetch<APP.MovieSearch>('/api/s
                   />
                 </div>
                 <div
-                  class="py-1 w-[calc(70%-.5rem)] md:(w-[calc(70%-1rem)]) flex flex-col h-full justify-between res"
+                  class="py-1 w-[calc(70%-.5rem)] md:(w-[calc(70%-1rem)]) flex flex-col h-full justify-between"
                 >
-                  <div class="res__t" v-html="item.title" />
-                  <div class="res__c" v-html="item.content" />
+                  <div class="text-4">
+                    <div class="text-[--td-text-color-primary]">{{ item.title }}</div>
+                    <div class="text-[--td-text-color-secondary]">{{ item.ename }}</div>
+                  </div>
+                  <div>{{ item.year }}</div>
                 </div>
               </NuxtLink>
             </div>
@@ -84,42 +86,3 @@ const { data, status, error, refresh } = await useFetch<APP.MovieSearch>('/api/s
     </template>
   </AppContentState>
 </template>
-
-<style lang="css">
-.res em {
-  color: var(--td-brand-color);
-  font-style: normal;
-}
-.res .res__t {
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 1.25;
-}
-.res .res__c {
-  color: var(--td-text-color-secondary);
-  line-height: 22px;
-}
-.res .res__t,
-.res .res__t p,
-.res .res__c p {
-  display: -webkit-box;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-clamp: 2;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-@media (min-width: 768px) and (max-width: 968px) {
-  .res .res__t,
-  .res .res__t p,
-  .res .res__c p {
-    display: -webkit-box;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-clamp: 1;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-  }
-}
-</style>

@@ -1,4 +1,3 @@
-import * as cheerio from 'cheerio'
 import { IMAGE_SERVICE, IMAGE_CDN, GYING_API, IMAGE_FORMAT } from '~/constants/gying'
 import { getDynamicHeader } from '~/utils/header'
 export default defineEventHandler(async (event) => {
@@ -14,34 +13,48 @@ export default defineEventHandler(async (event) => {
     })
   }
   const headers = await getDynamicHeader()
-  return $fetch(`${GYING_API}/s/1---${query.no}/${encodeURIComponent(query.name)}`, {
+  return $fetch(`${GYING_API}/res/s/1---${query.no}/${encodeURIComponent(query.name)}`, {
     method: 'GET',
     headers: {
       ...headers,
       Referer: `${GYING_API}`,
     },
     onResponse({ response }) {
-      const html = response._data
-      const $ = cheerio.load(html)
-      const breadcrumbsText = $('.breadcrumbs').text()
-      const match = breadcrumbsText.match(/为您找到(\d+)条/)
-      const total = match ? Number.parseInt(match[1], 10) : 0
-      const results = $('.sr_lists li')
-        .map((_, li) => {
-          const title = $(li).find('h3').html()?.trim() || ''
-          const type = $(li).find('a').attr('href')?.split('/')[1] || ''
-          const id = $(li).find('a').attr('href')?.split('/').pop() || ''
-          const content = $(li).find('.int').html()?.trim() || ''
-          const image = `${IMAGE_SERVICE}${IMAGE_CDN}/img/${type}/${id}${IMAGE_FORMAT}`
-          return { title, content, type, id, image }
-        })
-        .get()
+      const res = response._data as {
+        inlist: {
+          daoyan: Array<string>
+          bianju: Array<string>
+          zhuyan: Array<string>
+          pf: any
+          title: Array<string>
+          name: Array<string>
+          ename: Array<string>
+          year: Array<string>
+          d: Array<string>
+          i: Array<string>
+        }
+        page: {
+          pages: number
+          curr: number
+          set: number
+        }
+      }
+
+      const list = res.inlist.title.map((title, index) => ({
+        title,
+        id: res.inlist.i[index],
+        type: res.inlist.d[index],
+        image: `${IMAGE_SERVICE}${IMAGE_CDN}/img/${res.inlist.d[index]}/${res.inlist.i[index]}${IMAGE_FORMAT}`,
+        ename: res.inlist.ename[index],
+        year: res.inlist.year[index],
+      }))
+
       response._data = {
-        pageNo: Number.parseInt(query.no),
+        pageNo: res.page.curr,
         pageSize: 25,
-        pageMax: Math.ceil(total / 25) > 10 ? 10 : Math.ceil(total / 25),
-        total,
-        list: results,
+        total: res.page.pages === 1 ? res.inlist.title.length : res.page.pages * 25,
+        pageMax: res.page.pages,
+        list,
       }
     },
   })
